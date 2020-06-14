@@ -7,19 +7,29 @@ const path = require('path');
 const videoElement = document.querySelector("video");
 const videoSelectBtn = document.getElementById("videoSelectBtn");
 const stopBtn = document.getElementById("stopBtn");
-const startBtn = document.getElementById("startBtn");
-const fileNameTextField = document.getElementById('filenameTextField');
+const startBtn = document.getElementById("startBtn"); 
 
 //Get available video sources
 let mediaRecorder;
 let recordedChunks = [];
 
+document.addEventListener('DOMContentLoaded',() =>{
+    startBtn.style.display = 'none';
+    stopBtn.style.display = 'none';
+});
+
+
+
+const showControls = () =>{
+    startBtn.style.display = 'block';
+    stopBtn.style.display = 'block';
+}
 
 startBtn.onclick = (e) => { 
-    mediaRecorder.start();
-    fileNameTextField.style.display = 'none'
+    mediaRecorder.start(); 
   startBtn.classList.add("is-danger");
   startBtn.innerText = "Recording";
+  startBtn.disabled = true;
   notifier.notify ({
     title: 'My awesome title',
     message: 'Hello from electron, Mr. User!',
@@ -35,10 +45,10 @@ startBtn.onclick = (e) => {
  
 
 stopBtn.onclick = (e) => {
-   mediaRecorder.stop();
-   fileNameTextField.style.display = 'block'
+   mediaRecorder.stop(); 
   startBtn.classList.remove("is-danger");
   startBtn.innerText = "Start";
+  startBtn.disabled = false;
 };
 
 const videoSources = async () => {
@@ -91,7 +101,7 @@ const selectSource = async (source) => {
   videoElement.muted = true;
   videoElement.volume = 0;
   videoElement.play();
-
+   showControls();
   let videoOutputOptions = {
       mimeType: 'video/webm;codecs=vp9',
      audioBitsPerSecond: 128000,
@@ -132,7 +142,7 @@ const handleDataAvailable = (event) => {
 };
 
 const handleStop = async (e) =>{ 
-
+       
         const rand =  Math.floor((Math.random() * 10000000));
 	    const name  = "video_"+Date.now()+"-"+rand+".webm" ; 
         const blob = new Blob(recordedChunks, { type: 'video/webm'});
