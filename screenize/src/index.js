@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const { app, BrowserWindow,Tray, Menu } = require('electron');
+const path = require('path');  
+const notifier = require('node-notifier');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -13,14 +14,39 @@ const createWindow = () => {
     height: 600,
     webPreferences:{
       nodeIntegration:true
-    }
+    },
+    icon: path.join(__dirname, 'sm-logo.png')
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
+ 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+  
+
+  const tray = new Tray(path.join(__dirname, 'sm-logo.png'));
+ 
+  mainWindow.on('minimize',function(event){
+    event.preventDefault();
+    notifier.notify({
+      title:'Notification', 
+      message: 'Recroding screen in background',
+      icon: path.join(__dirname, 'sm-logo.png'),  // Absolute path 
+      sound: true,  // Only Notification Center or Windows Toasters
+      wait: true  
+    }, (err, response) => {
+      // Response is response from notification
+   });
+    mainWindow.hide(); 
+
+    tray.on('click', () =>{
+      mainWindow.show();
+    }); 
+tray.setTitle('Screen Recorder app'); 
+});
+
+
 };
 
 // This method will be called when Electron has finished
@@ -44,6 +70,8 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
