@@ -1,24 +1,50 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
-    <link rel="stylesheet" href="index.css"> 
-    <script defer src="render.js"></script>
-  </head>
-  <body class="content">
-    <h1>⚡ Screen Recorder</h1>
-     <h3>This project is made with ❤ by <a target="_blank" href="https://github.com/eskye">Sunkanmi Ijatuyi</a></h3>
 
-    <video></video>
+<head>
+  <meta charset="UTF-8">
+  <title>Screen Recorder</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
+  <link rel="stylesheet" href="index.css">
+  <script defer src="render.js"></script>
+</head>
 
-    <button id="startBtn" class="button is-primary">Start Screen Recording</button>
-    <button id="stopBtn" class="button is-warning">Stop Recording</button>
+<body class="content">
 
-    <hr /> 
-    <button id="videoSelectBtn" class="button is-text">
+  <h1>🎥 Screen Recorder</h1>
+
+  <div class="tags has-addons">
+    <span class="tag">Dev!</span>
+    <span class="tag is-success">0.1.0</span>
+  </div>
+  <div class="mb-4">
+    <button id="videoSelectBtn" class="button is-text is-full has-text-centered">
       Select screen source
     </button>
-  </body>
+  </div>
+ <br/>
+  <div class="container">
+    <video></video>
+  </div>
+  <div class="field is-grouped">
+    <p class="control">
+      <button id="startBtn" class="button is-primary">Start</button>
+    </p>
+   
+  <p class="control">
+    <button id="stopBtn" class="button is-danger">Stop </button>
+  </p>
+    
+  </div>
+
+  <!-- <footer>
+      <div class="content has-text-centered">
+        <p class="is-medium">
+            v1.0.0
+        </p>
+      </div>
+    </footer> -->
+
+</body>
+
 </html>
