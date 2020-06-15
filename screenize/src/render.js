@@ -29,7 +29,7 @@ const showControls = () =>{
 
 startBtn.onclick = (e) => { 
     mediaRecorder.start(); 
-  startBtn.classList.add("is-danger");
+  startBtn.classList.add("is-success");
   startBtn.innerText = "Recording";
   startBtn.disabled = true;
   stopBtn.disabled = false;
@@ -41,7 +41,7 @@ startBtn.onclick = (e) => {
 stopBtn.onclick = (e) => {
    mediaRecorder.stop(); 
    notification('Recording stopped and ready to save');
-  startBtn.classList.remove("is-danger");
+  startBtn.classList.remove("is-success");
   startBtn.innerText = "Start";
   startBtn.disabled = false;
   stopBtn.disabled = true;
