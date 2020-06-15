@@ -3,6 +3,7 @@ const { Menu, dialog } = remote;
 const { writeFileSync } = require("fs"); 
 const notifier = require('node-notifier');
 const path = require('path');
+const nodeDiskInfo = require('node-disk-info');
 
 const videoElement = document.querySelector("video");
 const videoSelectBtn = document.getElementById("videoSelectBtn");
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded',() =>{
 const showControls = () =>{
     startBtn.style.display = 'block';
     stopBtn.style.display = 'block';
+    videoSelectBtn.disabled = true;
 }
 
 startBtn.onclick = (e) => { 
@@ -30,25 +32,20 @@ startBtn.onclick = (e) => {
   startBtn.classList.add("is-danger");
   startBtn.innerText = "Recording";
   startBtn.disabled = true;
-  notifier.notify ({
-    title: 'My awesome title',
-    message: 'Hello from electron, Mr. User!',
-    icon: path.join(__dirname, 'sm-logo.png'),  // Absolute path 
-    sound: true,  // Only Notification Center or Windows Toasters
-    wait: true    // Wait with callback, until user action is taken  
- 
- }, (err, response) => {
-    // Response is response from notification
- });
+  stopBtn.disabled = false;
+  notification('Recording started');
 };
 
  
 
 stopBtn.onclick = (e) => {
    mediaRecorder.stop(); 
+   notification('Recording stopped and ready to save');
   startBtn.classList.remove("is-danger");
   startBtn.innerText = "Start";
   startBtn.disabled = false;
+  stopBtn.disabled = true;
+  videoSelectBtn.disabled = false;
 };
 
 const videoSources = async () => {
@@ -146,6 +143,7 @@ const handleStop = async (e) =>{
         const rand =  Math.floor((Math.random() * 10000000));
 	    const name  = "video_"+Date.now()+"-"+rand+".webm" ; 
         const blob = new Blob(recordedChunks, { type: 'video/webm'});
+        if(!checkDisk(blob.size)) return;
         const blobraw = await blob.arrayBuffer();
         const buffer = Buffer.from(blobraw);
         const { filePath } = await dialog.showSaveDialog(
@@ -177,9 +175,19 @@ const stopVideo = () => {
     videoElement.volume = 1;
 }
 
-
-
-
-
+const checkDisk = (blobSize) => {
+    const disks = nodeDiskInfo.getDiskInfoSync(); 
+   return disks.every(disk => disk._available > blobSize); 
+}
  
+const notification = (message) =>{
+    notifier.notify({
+        title: 'Notification',
+        message: message,
+        icon: path.join(__dirname, 'sm-logo.png'),
+        sound: true,
+        wait: true // Wait with callback, until user action is taken  
+       }, (err, response) => {
+    });
+}
 
