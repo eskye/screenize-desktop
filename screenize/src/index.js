@@ -15,7 +15,8 @@ const createWindow = () => {
     title: 'Screen Recorder',
     webPreferences:{
       nodeIntegration:true,
-      devTools: false
+      nodeIntegrationInWorker:true,
+      devTools: true
     },
     icon: path.join(__dirname, 'sm-logo.png')
   });
@@ -24,7 +25,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
  
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   
 
   const tray = new Tray(path.join(__dirname, 'sm-logo.png'));

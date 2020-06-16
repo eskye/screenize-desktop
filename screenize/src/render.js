@@ -4,7 +4,14 @@ const { writeFileSync } = require("fs");
 const notifier = require('node-notifier');
 const path = require('path');
 const nodeDiskInfo = require('node-disk-info');
+const {exec} = require('child_process');
+const ffmpeg = require('ffmpeg-static-electron');
+//const ffmpeg = require('fluent-ffmpeg');
+ 
+// const ffmpegCmd =  ffmpeg();
+// ffmpegCmd.mergeToFile
 
+  
 const videoElement = document.querySelector("video");
 const videoSelectBtn = document.getElementById("videoSelectBtn");
 const stopBtn = document.getElementById("stopBtn");
@@ -14,7 +21,18 @@ const startBtn = document.getElementById("startBtn");
 let mediaRecorder;
 let recordedChunks = [];
 
+// const ffmpegPath1 = ffmpeg.path
+//   ? ffmpeg.path.replace('app.asar', 'app.asar.unpacked')
+//   : false;
+// const ffmpegPath2 = ffmpegPath1.replace(
+//   '/dist/',
+//   '/node_modules/ffmpeg-static/'
+// );
+
 document.addEventListener('DOMContentLoaded',() =>{
+  (async () => { 
+    
+})(); 
     startBtn.style.display = 'none';
     stopBtn.style.display = 'none';
 });
@@ -145,13 +163,14 @@ const handleStop = async (e) =>{
         const blob = new Blob(recordedChunks, { type: 'video/webm'});
         if(!checkDisk(blob.size)) return;
         const blobraw = await blob.arrayBuffer();
-        const buffer = Buffer.from(blobraw);
+        const convertedBlob = await convertWebmToMp4(name, new Uint8Array(blobraw));
+        const buffer = Buffer.from(convertedBlob);
         const { filePath } = await dialog.showSaveDialog(
             {
                buttonLabel: 'Save video',
                defaultPath: name,
                filters :[
-                {name: 'webm', extensions: ['webm',]},
+                {name: 'mp4', extensions: ['mp4',]},
                 {name: 'All Files', extensions: ['*']}
                ]
             }
@@ -189,5 +208,31 @@ const notification = (message) =>{
         wait: true // Wait with callback, until user action is taken  
        }, (err, response) => {
     });
+}
+
+const convertWebmToMp4 = async (name, webcamData)=>{
+  await exec(ffmpeg.path, [
+    '-i',
+     webcamData,
+    '-f',
+    'mp4',
+    '-vcodec','libx264', // video codec
+    '-acodec','aac', // audio codec
+    '-b:v', '6400k',  // video bitrate
+    '-b:a', '4800k',  // audio bitrate
+    '-strict', 'experimental', // standard
+    '-r',
+    '30000/1001',
+    '-crf',
+    '26',
+    '-g',
+    '16',
+    '-movflags',
+    'faststart',
+    '-preset',
+    'veryfast',
+      name,
+  ])
+   
 }
 

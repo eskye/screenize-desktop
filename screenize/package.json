@@ -9,8 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "build:linux":"electron-forge package --platform linux",
-    "make:linux":"electron-forge make --platform linux --target linux",
+    "build:linux": "electron-forge package --platform linux",
+    "make:linux": "electron-forge make --platform linux --target linux",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
@@ -50,6 +50,9 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "ffmpeg-static": "^4.2.4",
+    "ffmpeg-static-electron": "^2.0.1",
+    "fluent-ffmpeg": "^2.1.2",
     "node-disk-info": "^1.1.0",
     "node-notifier": "^7.0.1"
   },
